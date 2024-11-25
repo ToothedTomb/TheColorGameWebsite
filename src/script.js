@@ -1,7 +1,7 @@
 let timeLeft = 90;
 let score = 0;
 let currentColor;
-let timerId;
+let timerId = null; // Ensure the timerId is properly handled
 
 // Colors and their hex codes
 const colorNames = ["Red", "Blue", "Green", "Yellow", "Pink", "Orange", "Black", "Gray"];
@@ -34,6 +34,7 @@ function updateTimer() {
 
     if (timeLeft <= 0) {
         clearInterval(timerId);
+        timerId = null; // Clear the timer ID
         timeLabel.textContent = "Game Over!";
         colorInput.disabled = true;
     }
@@ -64,12 +65,22 @@ colorInput.addEventListener('keypress', (e) => {
 
 // Restart game
 restartButton.addEventListener('click', () => {
-    clearInterval(timerId);
+    // Stop any running timer
+    if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+    }
+
+    // Reset game state
     timeLeft = 90;
     score = 0;
     scoreLabel.textContent = "Score: 0";
     timeLabel.textContent = "Time left: 90";
     colorInput.disabled = false;
+    colorInput.value = '';
+    colorInput.focus();
+
+    // Start the game with a new color
     nextColor();
 });
 
